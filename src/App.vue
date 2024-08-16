@@ -15,12 +15,13 @@
           <input type="submit" value="logout" @click="logout" />
         </form>
       </header>
-      <main>
+      <main ref="chatContainer">
         <div
           v-for="message in state.messages"
           :key="message.id"
           class="message-container"
           :class="message.username === state.username && 'current-chat'"
+          @change="scrollToBotton"
         >
           <div class="user-logo">
             <div class="logo">
@@ -32,21 +33,21 @@
             {{ message.body }}
           </div>
         </div>
-        <form class="input-message" @submit.prevent>
-          <input type="text" v-model="inputMessage" placeholder="Message" />
-          <input type="submit" value="send" @click="sendMeesage" />
-        </form>
       </main>
+      <form class="input-message" @submit.prevent>
+        <input type="text" v-model="inputMessage" placeholder="Message" />
+        <input type="submit" value="send" @click="sendMeesage" />
+      </form>
     </div>
   </div>
 </template>
 <script setup>
-import { reactive, ref, onMounted } from "vue";
+import { nextTick, ref, onMounted, reactive } from "vue";
 import { onValue, push } from "firebase/database";
-
 import messageRef from "./db";
 let inputLogin = ref("");
 let inputMessage = ref("");
+const chatContainer = ref(null);
 let state = reactive({
   username: "",
   messages: [],
@@ -55,6 +56,7 @@ const login = () => {
   if (inputLogin.value !== "" || inputLogin.value !== null)
     state.username = inputLogin.value;
   inputLogin.value = "";
+  scrollToBottom();
 };
 const logout = () => {
   state.value.username = "";
@@ -67,6 +69,7 @@ const sendMeesage = () => {
   };
   push(messageRef, message);
   inputMessage.value = "";
+  scrollToBottom();
 };
 onMounted(() => {
   onValue(messageRef, (snapshot) => {
@@ -83,10 +86,16 @@ onMounted(() => {
       });
       state.messages = messages;
     }
-    // console.log(messages);
-    // console.log(state.messages);
+    scrollToBottom();
   });
 });
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (chatContainer.value) {
+      chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+    }
+  });
+};
 </script>
 <style lang="scss">
 $main-color: #5ea3de;
@@ -97,18 +106,6 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #1f316f, #5b99c2);
   background-repeat: no-repeat;
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 5px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-  }
 }
 * {
   padding: 0;
@@ -134,7 +131,7 @@ input {
 .container {
   width: 90%;
   margin: auto;
-  padding: 15px;
+  padding: 15px 15px 0;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -179,6 +176,8 @@ input {
   .chat {
     text-align: start;
     min-width: 400px;
+    max-width: 1000px;
+    position: relative;
     header {
       display: flex;
       justify-content: space-between;
@@ -200,23 +199,33 @@ input {
       position: relative;
       display: flex;
       flex-direction: column;
-      min-height: 86vh;
+      height: 89vh;
       background: linear-gradient(225deg, #1f316f, #5b99c2);
       box-shadow: 0 0 2px 0px #0000007c;
       padding: 10px;
-      padding-bottom: 40px;
+      padding-bottom: 55px;
       border-radius: 10px;
+      overflow-y: scroll;
+      &::-webkit-scrollbar {
+        width: 5px;
+      }
 
+      &::-webkit-scrollbar-thumb {
+        background-color: #2a3e48;
+        border-radius: 5px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+      }
       .message-container {
         position: relative;
         align-self: flex-start;
         background-color: $bg-color;
-        // max-width: 70%;
-        // width: 400px;
         font-size: 14px;
         padding: 5px;
         margin-bottom: 15px;
-        margin-left: 20px;
+        margin-left: 25px;
         border-radius: 10px;
         &.current-chat {
           align-self: flex-end;
@@ -250,33 +259,37 @@ input {
           word-break: break-word;
         }
       }
-      .input-message {
-        position: absolute;
-        left: 0;
-        bottom: 5px;
-        width: 100%;
-        text-align: center;
-        input {
-          padding: 10px 15px;
-          border-radius: 10px;
+    }
+    .input-message {
+      position: absolute;
+      left: calc(50%);
+      transform: translateX(-50%);
+      bottom: 0;
+      width: 98%;
+      padding: 10px 0;
+      text-align: center;
+      background: #2a3e48;
+      border-radius: 10px;
+      input {
+        padding: 10px 15px;
+        border-radius: 10px;
+      }
+      input[type="text"] {
+        color: #fff;
+        background-color: $bg-color;
+        padding: 10px 30px;
+        width: 80%;
+        margin-right: 5px;
+        &::placeholder {
+          color: #a5a5a5;
         }
-        input[type="text"] {
-          color: #fff;
-          background-color: $bg-color;
-          padding: 10px 30px;
-          width: 80%;
-          margin-right: 5px;
-          &::placeholder {
-            color: #a5a5a5;
-          }
-        }
-        input[type="submit"] {
-          background-color: #5b99c2;
-          color: #fff;
-          transition: 0.3s;
-          &:hover {
-            background-color: #32479c;
-          }
+      }
+      input[type="submit"] {
+        background-color: #5b99c2;
+        color: #fff;
+        transition: 0.3s;
+        &:hover {
+          background-color: #32479c;
         }
       }
     }

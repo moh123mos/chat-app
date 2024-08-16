@@ -17,6 +17,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-console.log(db);
+// console.log(db);
 const messageRef = ref(db, "messages");
 export default messageRef;
