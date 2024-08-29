@@ -55,11 +55,13 @@ let state = reactive({
 const login = () => {
   if (inputLogin.value !== "" || inputLogin.value !== null)
     state.username = inputLogin.value;
+  localStorage.setItem("username", state.username);
   inputLogin.value = "";
   scrollToBottom();
 };
 const logout = () => {
-  state.value.username = "";
+  state.username = "";
+  localStorage.setItem("username", "");
 };
 const sendMeesage = () => {
   if (inputMessage.value === null || inputMessage.value === "") return;
@@ -72,6 +74,8 @@ const sendMeesage = () => {
   scrollToBottom();
 };
 onMounted(() => {
+  if (localStorage.getItem("username"))
+    state.username = localStorage.getItem("username");
   onValue(messageRef, (snapshot) => {
     let data = snapshot.val();
     let messages = [];
@@ -110,17 +114,17 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
-&::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 5px;
 }
 
-&::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background-color: #202d3b;
   border-radius: 5px;
 }
 
-&::-webkit-scrollbar-track {
-  background-color: #15202b;
+*::-webkit-scrollbar-track {
+  background-color: $bg-color;
 }
 .background {
   position: fixed;
@@ -138,12 +142,12 @@ input {
   }
 }
 .container {
-    margin: auto;
-    padding: 15px 0;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    max-width: 1000px;
+  margin: auto;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  max-width: 1000px;
   .login {
     width: 100%;
     max-width: 500px;
@@ -164,25 +168,21 @@ input {
           outline: none;
         }
       }
-      input[type="text"] {
-        &:focus {
-          outline: 2px solid #1f316f;
-        }
-      }
       input[type="submit"] {
         text-transform: capitalize;
         cursor: pointer;
-        color: #1f316f;
+        color: #000;
         font-weight: 900;
         transition: 0.3s;
         &:hover {
-          background-color: #1f306f;
+          background-color: $main-color;
           color: white;
         }
       }
     }
   }
   .chat {
+    width: 100%;
     text-align: start;
     max-width: 1000px;
     position: relative;
@@ -216,7 +216,7 @@ input {
       .message-container {
         position: relative;
         align-self: flex-start;
-        background-color: $bg-color;
+        background-color: $second-color;
         font-size: 14px;
         padding: 5px;
         margin-bottom: 15px;
@@ -256,15 +256,15 @@ input {
       }
     }
     .input-message {
-    position: fixed;
-    max-width: 1150px;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -5px;
-    padding: 10px 0;
-    width: 100%;
-    text-align: center;
-    background: #15202b;
+      position: fixed;
+      max-width: 1150px;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -5px;
+      padding: 10px 0;
+      width: 100%;
+      text-align: center;
+      background: #15202b;
       input {
         padding: 10px 15px;
         border-radius: 10px;
@@ -280,6 +280,8 @@ input {
         }
       }
       input[type="submit"] {
+        font-weight: bold;
+        text-transform: capitalize;
         background-color: #fff;
         color: #04aa6d;
         transition: 0.3s;
