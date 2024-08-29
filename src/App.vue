@@ -98,28 +98,37 @@ const scrollToBottom = () => {
 };
 </script>
 <style lang="scss">
-$main-color: #5ea3de;
-$second-color: #1f316f;
-$bg-color: #333c4d;
+$main-color: #04aa6d;
+$second-color: #2f2f2f;
+$bg-color: #15202b;
 body {
   color: #fff;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #1f316f, #5b99c2);
-  background-repeat: no-repeat;
 }
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
+&::-webkit-scrollbar {
+  width: 5px;
+}
+
+&::-webkit-scrollbar-thumb {
+  background-color: #202d3b;
+  border-radius: 5px;
+}
+
+&::-webkit-scrollbar-track {
+  background-color: #15202b;
+}
 .background {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #1f316f, #5b99c2);
-  background-repeat: no-repeat;
+  background: $bg-color;
   z-index: -1;
 }
 input {
@@ -129,19 +138,19 @@ input {
   }
 }
 .container {
-  width: 90%;
-  margin: auto;
-  padding: 15px 15px 0;
-  display: flex;
-  justify-content: center;
-  text-align: center;
+    margin: auto;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    max-width: 1000px;
   .login {
     width: 100%;
     max-width: 500px;
     display: block !important;
     padding: 30px 30px;
     border-radius: 15px;
-    background: #5b99c2;
+    background: $bg-color;
     form {
       margin-top: 15px;
       display: flex;
@@ -175,23 +184,24 @@ input {
   }
   .chat {
     text-align: start;
-    min-width: 400px;
     max-width: 1000px;
     position: relative;
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      padding-bottom: 10px;
+      margin: 0 10px 15px;
+      border-bottom: 3px solid #fff;
       input[type="submit"] {
         cursor: pointer;
         text-transform: capitalize;
         padding: 10px 5px;
         border-radius: 10px;
-        color: #1f316f;
+        color: #000;
         font-weight: 900;
         &:hover {
-          color: indianred;
+          color: #df0303;
         }
       }
     }
@@ -199,25 +209,10 @@ input {
       position: relative;
       display: flex;
       flex-direction: column;
-      height: 89vh;
-      background: linear-gradient(225deg, #1f316f, #5b99c2);
-      box-shadow: 0 0 2px 0px #0000007c;
       padding: 10px;
       padding-bottom: 55px;
       border-radius: 10px;
       overflow-y: scroll;
-      &::-webkit-scrollbar {
-        width: 5px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background-color: #2a3e48;
-        border-radius: 5px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-color: #f1f1f1;
-      }
       .message-container {
         position: relative;
         align-self: flex-start;
@@ -231,7 +226,7 @@ input {
           align-self: flex-end;
           margin-left: 50%;
           margin-right: 20px;
-          background: #4e79a4;
+          background: $main-color;
           .user-logo {
             right: -25px;
             left: calc(100% + 3px);
@@ -247,7 +242,7 @@ input {
           cursor: pointer;
           position: absolute;
           left: -25px;
-          background: linear-gradient(135deg, #1f316f, #5b99c2);
+          background: $main-color;
           border-radius: 50%;
         }
         .username {
@@ -261,22 +256,22 @@ input {
       }
     }
     .input-message {
-      position: absolute;
-      left: calc(50%);
-      transform: translateX(-50%);
-      bottom: 0;
-      width: 98%;
-      padding: 10px 0;
-      text-align: center;
-      background: #2a3e48;
-      border-radius: 10px;
+    position: fixed;
+    max-width: 1150px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -5px;
+    padding: 10px 0;
+    width: 100%;
+    text-align: center;
+    background: #15202b;
       input {
         padding: 10px 15px;
         border-radius: 10px;
       }
       input[type="text"] {
         color: #fff;
-        background-color: $bg-color;
+        background-color: $second-color;
         padding: 10px 30px;
         width: 80%;
         margin-right: 5px;
@@ -285,11 +280,12 @@ input {
         }
       }
       input[type="submit"] {
-        background-color: #5b99c2;
-        color: #fff;
+        background-color: #fff;
+        color: #04aa6d;
         transition: 0.3s;
         &:hover {
-          background-color: #32479c;
+          background-color: #04aa6d;
+          color: #fff;
         }
       }
     }
