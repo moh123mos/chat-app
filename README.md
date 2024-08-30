@@ -1,5 +1,5 @@
 # chat-app
-## [Demo](https://66bf67af0e229946a5c88779--roaring-churros-8adbed.netlify.app/)
+## [Demo](https://elaborate-peony-cc080c.netlify.app/)
 ## Project setup
 ```
 npm install
